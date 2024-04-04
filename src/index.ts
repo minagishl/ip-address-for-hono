@@ -1,9 +1,14 @@
-import { Hono } from 'hono'
+import { Hono } from 'hono';
 
-const app = new Hono()
+const app = new Hono();
 
 app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+	const realIP =
+		c.req.raw.headers.get('Cf-Connecting-Ip') ||
+		c.req.header('X-Forwarded-For') ||
+		c.req.header('x-real-ip') ||
+		'unknown';
+	return c.text(realIP);
+});
 
-export default app
+export default app;
